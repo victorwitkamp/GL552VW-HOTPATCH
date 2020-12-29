@@ -3,9 +3,7 @@ USING BIOS V304
 
 0. ORIGINAL DSDT 
 1. [bat] ASUS G75VW
-2. [sys] Fix _WAK Arg0 v2
-    SSDTTime says:
-    Could not locate any ACPI000E devices!  SSDT-AWAC not needed!
+2. [sys] Fix _WAK Arg0 v2 (SSDTTime says: Could not locate any ACPI000E devices!  SSDT-AWAC not needed!)
 3. [sys] HPET Fix
 4. [sys] SMBUS Fix
 5. [sys] IRQ Fix
