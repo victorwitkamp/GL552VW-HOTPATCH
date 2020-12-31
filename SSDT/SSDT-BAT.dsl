@@ -2,98 +2,69 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
 {
     External(_SB.PCI0, DeviceObj)
     External(_SB.PCI0.BAT0, DeviceObj)
-    
-    External(_SB.PCI0.LPCB.EC0.ACAP, MethodObj)
-    External(CHGS, MethodObj)
-    External(BLLO, IntObj)
-    External(_SB.PCI0.LPCB.EC0.EB0S, FieldUnitObj)
-    External(_SB.PCI0.BAT0.PUNT, IntObj)
-    External(_SB.PCI0.BAT0.LFCC, IntObj)
-    External(MBLF, IntObj)
-    External(_SB.PCI0.BAT0.PBST, PkgObj)
-    External(_SB.PCI0.LPCB.EC0.BATP, MethodObj)
-    External(_SB.PCI0.BAT0.NBIX, PkgObj)
-    External(_SB.PCI0.LPCB.EC0.GBTT, MethodObj)
     External(_SB.PCI0.BAT0._BIF, MethodObj)
-    External(_SB.PCI0.BAT0.PBIF, PkgObj)
     External(_SB.PCI0.BAT0.BIXT, PkgObj)
+    External(_SB.PCI0.BAT0.LFCC, IntObj)
+    External(_SB.PCI0.BAT0.NBIX, PkgObj)
+    External(_SB.PCI0.BAT0.PBIF, PkgObj)
+    External(_SB.PCI0.BAT0.PBST, PkgObj)
+    External(_SB.PCI0.BAT0.PUNT, IntObj)    
+
+    External(_SB.PCI0.LPCB.EC0, DeviceObj)   
+    External(_SB.PCI0.LPCB.EC0.ACAP, MethodObj)
+    External(_SB.PCI0.LPCB.EC0.ADDR, FieldUnitObj)
     
+    External(_SB.PCI0.LPCB.EC0.BATP, MethodObj)
+    
+    External(_SB.PCI0.LPCB.EC0.BCNT, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.BCN2, FieldUnitObj)
+    External (_SB.PCI0.LPCB.EC0.BLLO, IntObj)
+    External (_SB.PCI0.LPCB.EC0.BRAH, FieldUnitObj)
+    External (_SB.PCI0.LPCB.EC0.BSLF, IntObj)
+    External(_SB.PCI0.LPCB.EC0.CMDB, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.DAT0, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.DAT1, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.EB0S, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.ECAV, MethodObj)
-    External(BSLF, IntObj)
-    External(_SB.PCI0.LPCB.EC0.RDBL, IntObj)
-    External(_SB.PCI0.LPCB.EC0.RDWD, IntObj)
-    External(_SB.PCI0.LPCB.EC0.RDBT, IntObj)
-    External(_SB.PCI0.LPCB.EC0.RCBT, IntObj)
-    External(_SB.PCI0.LPCB.EC0.RDQK, IntObj)
+    External(_SB.PCI0.LPCB.EC0.GBTT, MethodObj)
     External(_SB.PCI0.LPCB.EC0.MUEC, MutexObj)
     External(_SB.PCI0.LPCB.EC0.PRTC, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.RCBT, IntObj)
+    External(_SB.PCI0.LPCB.EC0.RDBL, IntObj)
+    External(_SB.PCI0.LPCB.EC0.RDBT, IntObj)
+    External(_SB.PCI0.LPCB.EC0.RDQK, IntObj)
+    External(_SB.PCI0.LPCB.EC0.RDWD, IntObj)
     External(_SB.PCI0.LPCB.EC0.SBBY, IntObj)
-    External(_SB.PCI0.LPCB.EC0.ADDR, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.CMDB, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.SWTC, MethodObj)
-    External(_SB.PCI0.LPCB.EC0.BCNT, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.DAT0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.WRBL, IntObj)
-    External(_SB.PCI0.LPCB.EC0.WRWD, IntObj)
-    External(_SB.PCI0.LPCB.EC0.WRBT, IntObj)
     External(_SB.PCI0.LPCB.EC0.SDBT, IntObj)
+    External(_SB.PCI0.LPCB.EC0.SWTC, MethodObj)
+    External(_SB.PCI0.LPCB.EC0.WRBL, IntObj)
+    External(_SB.PCI0.LPCB.EC0.WRBT, IntObj)
     External(_SB.PCI0.LPCB.EC0.WRQK, IntObj)
+    External(_SB.PCI0.LPCB.EC0.WRWD, IntObj)
     External(_SB.PCI0.LPCB.EC0.PRT2, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.DAT1, FieldUnitObj)
+
     External(_SB.PCI0.LPCB.EC0.ADD2, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.CMD2, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.BCN2, FieldUnitObj)
+
     External(_SB.PCI0.LPCB.EC0.DA20, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.DA21, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.SSTS, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.SST2, FieldUnitObj)
     
-    External(_SB.PCI0.LPCB.EC0.B0D0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0D1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0D2, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0D3, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1D0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1D1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1D2, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1D3, FieldUnitObj)
+    External(CHGS, MethodObj)
+    External(BLLO, IntObj)
+    External(MBLF, IntObj)
+    External(BSLF, IntObj)
     
-    External(_SB.PCI0.LPCB.EC0.B0C0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0C1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1C0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1C1, FieldUnitObj)
-
-    External(_SB.PCI0.LPCB.EC0.B0M0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0M1, FieldUnitObj)
+    Method (B1B2, 2, NotSerialized)
+    { 
+        Return(Or(Arg0, ShiftLeft(Arg1, 8)))
+    }
     
-    External(_SB.PCI0.LPCB.EC0.B1M0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1M1, FieldUnitObj)
-    
-    External(_SB.PCI0.LPCB.EC0.B0F0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0F1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1F0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1F1, FieldUnitObj)
-    
-    External(_SB.PCI0.LPCB.EC0.B0S0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0S1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1S0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1S1, FieldUnitObj)
-    
-    External(_SB.PCI0.LPCB.EC0.B0V0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0V1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1V0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1V1, FieldUnitObj)
-    
-    External(_SB.PCI0.LPCB.EC0.B0R0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B0R1, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1R0, FieldUnitObj)
-    External(_SB.PCI0.LPCB.EC0.B1R1, FieldUnitObj)
-    
-    External(_SB.PCI0.LPCB, DeviceObj)
-    External(_SB.PCI0.LPCB.EC0, DeviceObj)
     Scope (_SB.PCI0.LPCB.EC0)
     {
-        OperationRegion (ERM2, EmbeddedControl, Zero, 0xFF)
-        Field(ERM2, ByteAcc, Lock, Preserve)
+        OperationRegion (ECOR, EmbeddedControl, Zero, 0xFF)
+        Field(ECOR, ByteAcc, Lock, Preserve)
         {
             Offset (0x93), 
             AH00,8,AH01,8, 
@@ -120,29 +91,54 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
             B1N0,8,B1N1,8
         }
         
-        OperationRegion (RMB1, EmbeddedControl, 0x18, 0x28)
-        Field (RMB1, ByteAcc, NoLock, Preserve)
+        OperationRegion (SMBX, EmbeddedControl, 0x18, 0x28)
+        Field (SMBX, ByteAcc, NoLock, Preserve)
         {
             Offset(4),
             BDAX,    256
         }
         
-        OperationRegion (RMB2, EmbeddedControl, 0x40, 0x28)
-        Field (RMB2, ByteAcc, NoLock, Preserve)
+        OperationRegion (SMB2, EmbeddedControl, 0x40, 0x28)
+        Field (SMB2, ByteAcc, NoLock, Preserve)
         {
             Offset(4),
             BDAY,    256
         }
         
-        Field (RMB1, ByteAcc, NoLock, Preserve)
+        Field (SMBX, ByteAcc, NoLock, Preserve)
         {
             Offset (0x04), 
             T2B0,8,T2B1,8
         }
-    }
-    
-    Scope (_SB.PCI0.LPCB.EC0)
-    {
+        
+        OperationRegion (BRAM, SystemIO, 0x0382, 0x02)
+        Field (BRAM, ByteAcc, Lock, Preserve)
+        {
+            BRAI,   8, 
+            BRAD,   8
+        }
+
+        IndexField (BRAI, BRAD, ByteAcc, NoLock, Preserve)
+        {
+            Offset (0xA0), 
+                B0V0,8,B0V1,8, 
+                B0R0,8,B0R1,8, 
+                B0F0,8,B0F1,8, 
+                B0M0,8,B0M1,8, 
+                B0S0,8,B0S1,8, 
+                B0C0,8,B0C1,8, 
+                B0D0,8,B0D1,8, 
+                B0D2,8,B0D3,8, 
+                B1V0,8,B1V1,8, 
+                B1R0,8,B1R1,8, 
+                B1F0,8,B1F1,8, 
+                B1M0,8,B1M1,8, 
+                B1S0,8,B1S1,8, 
+                B1C0,8,B1C1,8, 
+                B1D0,8,B1D1,8, 
+                B1D2,8,B1D3,8
+        }
+
         Method (RE1B, 1, NotSerialized)
         {
             OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
@@ -241,7 +237,7 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
             Store (Arg3, Index (PBST, 0x03))
         }
         
-                Method (CBST, 0, NotSerialized)
+        Method (CBST, 0, NotSerialized)
         {
             If (PUNT) { Store (B1B2(^^LPCB.EC0.B0D2,^^LPCB.EC0.B0D3), Index (PBST, 0x03))
                 Store (DerefOf (Index (PBST, 0x03)), Local0)
@@ -637,8 +633,5 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
 
     }
     
-    Method (B1B2, 2, NotSerialized)
-    { 
-        Return(Or(Arg0, ShiftLeft(Arg1, 8)))
-    }
+
 }
