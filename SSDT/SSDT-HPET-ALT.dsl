@@ -1,5 +1,4 @@
-// RENAME _CRS TO XCRS
-DefinitionBlock("", "SSDT", 2, "hack", "hpet", 0)
+DefinitionBlock ("", "SSDT", 2, "hack", "HPETALT", 0)
 {
     //External (HPAE, IntObj)
     External (HPTE, IntObj)

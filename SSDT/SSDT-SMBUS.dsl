@@ -1,4 +1,4 @@
-DefinitionBlock("", "SSDT", 2, "hack", "smbus", 0)
+DefinitionBlock ("", "SSDT", 2, "hack", "smbus", 0)
 {
     Scope (_SB.PCI0.HDAS)
     {

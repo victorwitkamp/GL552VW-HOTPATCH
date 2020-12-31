@@ -1,8 +1,4 @@
-//
-// Supplementary HPET _CRS from Goldfish64
-// Requires the HPET's _CRS to XCRS rename
-//
-DefinitionBlock ("", "SSDT", 2, "CORP", "HPET", 0x00000000)
+DefinitionBlock ("", "SSDT", 2, "hack", "HPET", 0)
 {
     External (\_SB.PCI0.LPCB, DeviceObj)    // (from opcode)
     External (\_SB.PCI0.LPCB.HPET, DeviceObj)    // (from opcode)
