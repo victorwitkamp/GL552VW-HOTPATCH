@@ -5,7 +5,7 @@
  * 
  * Disassembling to non-symbolic legacy ASL operators
  *
- * Disassembly of DSDT.aml, Sat Dec 26 00:38:13 2020
+ * Disassembly of DSDT.aml, Sun Nov 22 21:53:18 2020
  *
  * Original Table Header:
  *     Signature        "DSDT"
@@ -4154,138 +4154,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Zero, 
                     Zero
                 })
-                Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-                {
-                    If (LEqual (Arg0, ToUUID ("e5c937d0-3553-4d7a-9117-ea4d19c3434d") /* Device Labeling Interface */))
-                    {
-                        Switch (ToInteger (Arg2))
-                        {
-                            Case (Zero)
-                            {
-                                Name (OPTS, Buffer (0x02)
-                                {
-                                     0x00, 0x00                                       // ..
-                                })
-                                CreateBitField (OPTS, Zero, FUN0)
-                                CreateBitField (OPTS, 0x04, FUN4)
-                                CreateBitField (OPTS, 0x06, FUN6)
-                                CreateBitField (OPTS, 0x08, FUN8)
-                                CreateBitField (OPTS, 0x09, FUN9)
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    Store (One, FUN0) /* \_SB_.PCI0.RP09._DSM.FUN0 */
-                                    If (LTRE)
-                                    {
-                                        Store (One, FUN6) /* \_SB_.PCI0.RP09._DSM.FUN6 */
-                                    }
-
-                                    If (OBFF)
-                                    {
-                                        Store (One, FUN4) /* \_SB_.PCI0.RP09._DSM.FUN4 */
-                                    }
-
-                                    If (LEqual (ECR1, One))
-                                    {
-                                        If (LGreaterEqual (Arg1, 0x03))
-                                        {
-                                            Store (One, FUN8) /* \_SB_.PCI0.RP09._DSM.FUN8 */
-                                            Store (One, FUN9) /* \_SB_.PCI0.RP09._DSM.FUN9 */
-                                        }
-                                    }
-                                }
-
-                                Return (OPTS) /* \_SB_.PCI0.RP09._DSM.OPTS */
-                            }
-                            Case (0x04)
-                            {
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    If (OBFN)
-                                    {
-                                        Return (Buffer (0x10)
-                                        {
-                                            /* 0000 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                            /* 0008 */  0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00   // ........
-                                        })
-                                    }
-                                    Else
-                                    {
-                                        Return (Buffer (0x10)
-                                        {
-                                            /* 0000 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,  // ........
-                                            /* 0008 */  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00   // ........
-                                        })
-                                    }
-                                }
-                            }
-                            Case (0x06)
-                            {
-                                If (LGreaterEqual (Arg1, 0x02))
-                                {
-                                    If (LTRN)
-                                    {
-                                        If (LOr (LEqual (LMSL, Zero), LEqual (LNSL, Zero)))
-                                        {
-                                            If (LEqual (PCHS, SPTH))
-                                            {
-                                                Store (0x0846, LMSL) /* \_SB_.PCI0.LMSL */
-                                                Store (0x0846, LNSL) /* \_SB_.PCI0.LNSL */
-                                            }
-                                            ElseIf (LEqual (PCHS, SPTL))
-                                            {
-                                                Store (0x1003, LMSL) /* \_SB_.PCI0.LMSL */
-                                                Store (0x1003, LNSL) /* \_SB_.PCI0.LNSL */
-                                            }
-                                        }
-
-                                        Store (And (ShiftRight (LMSL, 0x0A), 0x07), Index (LTRV, Zero))
-                                        Store (And (LMSL, 0x03FF), Index (LTRV, One))
-                                        Store (And (ShiftRight (LNSL, 0x0A), 0x07), Index (LTRV, 0x02))
-                                        Store (And (LNSL, 0x03FF), Index (LTRV, 0x03))
-                                        Return (LTRV) /* \_SB_.PCI0.RP09.LTRV */
-                                    }
-                                    Else
-                                    {
-                                        Return (Zero)
-                                    }
-                                }
-                            }
-                            Case (0x08)
-                            {
-                                If (LEqual (ECR1, One))
-                                {
-                                    If (LGreaterEqual (Arg1, 0x03))
-                                    {
-                                        Return (One)
-                                    }
-                                }
-                            }
-                            Case (0x09)
-                            {
-                                If (LEqual (ECR1, One))
-                                {
-                                    If (LGreaterEqual (Arg1, 0x03))
-                                    {
-                                        Return (Package (0x05)
-                                        {
-                                            0xC350, 
-                                            Ones, 
-                                            Ones, 
-                                            0xC350, 
-                                            Ones
-                                        })
-                                    }
-                                }
-                            }
-
-                        }
-                    }
-
-                    Return (Buffer (One)
-                    {
-                         0x00                                             // .
-                    })
-                }
+                
 
                 Device (PXSX)
                 {
@@ -4334,6 +4203,22 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     }
 
                     Return (PR0C) /* \_SB_.PR0C */
+                }
+                Method (_DSM, 4, NotSerialized)
+                {
+                    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                    Return (Package()
+                    {
+                        "AAPL,clock-id", Buffer() { 0x01 },
+                        "built-in", Buffer() { 0x00 },
+                        "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                        "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                        "AAPL,current-available", 2100,
+                        "AAPL,current-extra", 2200,
+                        "AAPL,current-extra-in-sleep", 1600,
+                        "AAPL,device-internal", 0x02,
+                        "AAPL,max-port-current-in-sleep", 2100,
+                    })
                 }
             }
 
@@ -9090,6 +8975,14 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     SBBE,   8, 
                     SBBF,   8
                 }
+                Method (_DSM, 4, NotSerialized)
+                {
+                    If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                    Return (Package()
+                    {
+                        "compatible", "pci8086,9cc1",
+                    })
+                }
             }
         }
     }
@@ -9138,7 +9031,8 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
     }
 
     Method (_WAK, 1, NotSerialized)  // _WAK: Wake
-    {
+    {If (LOr(LLess(Arg0,1),LGreater(Arg0,5))) { Store(3,Arg0) }
+
         RWAK (Arg0)
         \_SB.PCI0.NWAK (Arg0)
         \_SB.PCI0.LPCB.SWAK (Arg0)
@@ -10858,16 +10752,6 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
     Scope (_SB.PCI0.LPCB)
     {
-        Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-        {
-            If (PCIC (Arg0))
-            {
-                Return (PCID (Arg0, Arg1, Arg2, Arg3))
-            }
-
-            Return (Zero)
-        }
-
         OperationRegion (LPC, PCI_Config, Zero, 0x0100)
         Field (LPC, AnyAcc, NoLock, Preserve)
         {
@@ -11926,23 +11810,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
             }
 
             Name (XFLT, Zero)
-            Method (_DSM, 4, Serialized)  // _DSM: Device-Specific Method
-            {
-                If (PCIC (Arg0))
-                {
-                    Return (PCID (Arg0, Arg1, Arg2, Arg3))
-                }
-
-                If (LEqual (Arg0, ToUUID ("ac340cb7-e901-45bf-b7e6-2b34ec931e23")))
-                {
-                    If (LEqual (Arg1, 0x03))
-                    {
-                        Store (Arg1, XFLT) /* \_SB_.PCI0.XHC_.XFLT */
-                    }
-                }
-
-                Return (Zero)
-            }
+            
 
             Method (_S3D, 0, NotSerialized)  // _S3D: S3 Device State
             {
@@ -11976,10 +11844,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 }
             }
 
-            Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-            {
-                Return (GPRW (0x6D, 0x03))
-            }
+            
 
             Method (_DSW, 3, NotSerialized)  // _DSW: Device Sleep Wake
             {
@@ -12206,6 +12071,22 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     }
                 }
             }
+            
+            Method(_PRW) { Return(Package() { 0x6D, 0 }) }
+            Method (_DSM, 4, NotSerialized)
+            {
+                If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                Return (Package()
+                {
+                    "subsystem-id", Buffer() { 0x70, 0x72, 0x00, 0x00 },
+                    "subsystem-vendor-id", Buffer() { 0x86, 0x80, 0x00, 0x00 },
+                    "AAPL,current-available", 2100,
+                    "AAPL,current-extra", 2200,
+                    "AAPL,current-extra-in-sleep", 1600,
+                    "AAPL,device-internal", 0x02,
+                    "AAPL,max-port-current-in-sleep", 2100,
+                })
+            }
         }
     }
 
@@ -12406,10 +12287,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 }
             }
 
-            Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-            {
-                Return (GPRW (0x6D, 0x04))
-            }
+            
 
             Method (_DSW, 3, NotSerialized)  // _DSW: Device Sleep Wake
             {
@@ -12430,6 +12308,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Notify (XDCI, 0x02) // Device Wake
                 }
             }
+            Method(_PRW) { Return(Package() { 0x6D, 0 }) }
         }
     }
 
@@ -12458,10 +12337,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 Store (Arg0, PMEE) /* \_SB_.PCI0.HDAS.PMEE */
             }
 
-            Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
-            {
-                Return (GPRW (0x6D, 0x04))
-            }
+            
 
             Method (GPEH, 0, NotSerialized)
             {
@@ -12581,6 +12457,22 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
 
                 ADBG ("_DSM UUID NOK")
             }
+            Device (BUS0)
+            {
+                Name (_CID, "smbus")
+                Name (_ADR, Zero)
+                Device (DVL0)
+                {
+                    Name (_ADR, 0x57)
+                    Name (_CID, "diagsvault")
+                    Method (_DSM, 4, NotSerialized)
+                    {
+                        If (LEqual (Arg2, Zero)) { Return (Buffer() { 0x03 } ) }
+                        Return (Package() { "address", 0x57 })
+                    }
+                }
+            }
+            Method(_PRW) { Return(Package() { 0x6D, 0 }) }
         }
 
         Device (SAT0)
@@ -15901,7 +15793,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
     }
 
     Name (ECUP, One)
-    Mutex (EHLD, 0x00)
+    Mutex(EHLD, 0)
     Scope (\)
     {
         Device (CHUB)
@@ -15976,7 +15868,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
         }
     }
 
-    Mutex (MUTX, 0x00)
+    Mutex(MUTX, 0)
     OperationRegion (PRT0, SystemIO, 0x80, 0x04)
     Field (PRT0, DWordAcc, Lock, Preserve)
     {
@@ -16579,7 +16471,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     Store (0x07DD, OSYS) /* \OSYS */
                 }
 
-                If (_OSI ("Windows 2015"))
+                If(LOr(_OSI("Darwin"),_OSI("Windows 2015")))
                 {
                     Store (0x07DF, OSYS) /* \OSYS */
                 }
@@ -27606,25 +27498,13 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     0x00000400,         // Address Length
                     _Y2F)
             })
-            Method (_STA, 0, NotSerialized)  // _STA: Status
+            
+
+            
+            Name (_STA, 0x0F)
+            Method (_CRS, 0, NotSerialized)
             {
-                If (HPTE)
-                {
-                    Return (0x0F)
-                }
-
-                Return (Zero)
-            }
-
-            Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
-            {
-                If (HPTE)
-                {
-                    CreateDWordField (BUF0, \_SB.PCI0.LPCB.HPET._Y2F._BAS, HPT0)  // _BAS: Base Address
-                    Store (HPTB, HPT0) /* \_SB_.PCI0.LPCB.HPET._CRS.HPT0 */
-                }
-
-                Return (BUF0) /* \_SB_.PCI0.LPCB.HPET.BUF0 */
+                Return (BUF0)
             }
         }
 
@@ -27907,7 +27787,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                     0x0070,             // Range Minimum
                     0x0070,             // Range Maximum
                     0x01,               // Alignment
-                    0x08,               // Length
+                    0x02,               // Length
                     )
                 IRQNoFlags ()
                     {8}
@@ -29325,8 +29205,8 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 Return (Local0)
             }
 
-            Mutex (MUEC, 0x00)
-            Mutex (MU4T, 0x00)
+            Mutex(MUEC, 0)
+            Mutex(MU4T, 0)
             Name (ECFL, Ones)
             Method (ECAV, 0, NotSerialized)
             {
@@ -29809,7 +29689,7 @@ DefinitionBlock ("", "DSDT", 2, "_ASUS_", "Notebook", 0x01072009)
                 THH1,   8
             }
 
-            Mutex (CMUT, 0x00)
+            Mutex(CMUT, 0)
             Method (_INI, 0, NotSerialized)  // _INI: Initialize
             {
                 If (LLessEqual (MSOS (), OSME))
@@ -32680,7 +32560,7 @@ Else
             }
         }
 
-        Mutex (MMPX, 0x00)
+        Mutex(MMPX, 0)
         Method (BATO, 0, Serialized)
         {
             Acquire (MMPX, 0xFFFF)
@@ -36291,7 +36171,7 @@ Else
             Return (Local0)
         }
 
-        Mutex (MUEP, 0x00)
+        Mutex(MUEP, 0)
         Method (RBEP, 1, NotSerialized)
         {
             Store (0xFFFF, Local1)
@@ -38677,7 +38557,7 @@ Else
             Return (Zero)
         }
 
-        Mutex (P4SM, 0x00)
+        Mutex(P4SM, 0)
         Method (SBYT, 2, Serialized)
         {
             Acquire (P4SM, 0xFFFF)
@@ -39109,7 +38989,7 @@ Else
         Name (XSCT, 0x18)
         Name (XSST, 0x1A)
         Name (XRCT, 0x1C)
-        Mutex (MUTE, 0x00)
+        Mutex(MUTE, 0)
         Method (BDFR, 4, NotSerialized)
         {
             ShiftLeft (Arg0, 0x14, Arg0)

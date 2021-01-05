@@ -18,9 +18,9 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
     
     External(_SB.PCI0.LPCB.EC0.BCNT, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.BCN2, FieldUnitObj)
-    External (_SB.PCI0.LPCB.EC0.BLLO, IntObj)
-    External (_SB.PCI0.LPCB.EC0.BRAH, FieldUnitObj)
-    External (_SB.PCI0.LPCB.EC0.BSLF, IntObj)
+    External(_SB.PCI0.LPCB.EC0.BLLO, IntObj)
+    External(_SB.PCI0.LPCB.EC0.BRAH, FieldUnitObj)
+    External(_SB.PCI0.LPCB.EC0.BSLF, IntObj)
     External(_SB.PCI0.LPCB.EC0.CMDB, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.DAT0, FieldUnitObj)
     External(_SB.PCI0.LPCB.EC0.DAT1, FieldUnitObj)
@@ -55,6 +55,9 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
     External(BLLO, IntObj)
     External(MBLF, IntObj)
     External(BSLF, IntObj)
+
+    External(BRAI, MethodObj)
+    External(BRAD, MethodObj)
     
     Method (B1B2, 2, NotSerialized)
     { 
@@ -63,7 +66,7 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
     
     Scope (_SB.PCI0.LPCB.EC0)
     {
-        OperationRegion (ECOR, EmbeddedControl, Zero, 0xFF)
+        External(ECOR, OpRegionObj)
         Field(ECOR, ByteAcc, Lock, Preserve)
         {
             Offset (0x93), 
@@ -91,36 +94,29 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
             B1N0,8,B1N1,8
         }
         
-        OperationRegion (SMBX, EmbeddedControl, 0x18, 0x28)
-        Field (SMBX, ByteAcc, NoLock, Preserve)
+        OperationRegion (RMB1, EmbeddedControl, 0x18, 0x28)
+        Field (RMB1, ByteAcc, NoLock, Preserve)
         {
             Offset(4),
             BDAX,    256
         }
         
-        OperationRegion (SMB2, EmbeddedControl, 0x40, 0x28)
-        Field (SMB2, ByteAcc, NoLock, Preserve)
+        OperationRegion (RMB2, EmbeddedControl, 0x40, 0x28)
+        Field (RMB2, ByteAcc, NoLock, Preserve)
         {
             Offset(4),
             BDAY,    256
         }
         
-        Field (SMBX, ByteAcc, NoLock, Preserve)
+        Field (RMB1, ByteAcc, NoLock, Preserve)
         {
             Offset (0x04), 
             T2B0,8,T2B1,8
         }
         
-        OperationRegion (BRAM, SystemIO, 0x0382, 0x02)
-        Field (BRAM, ByteAcc, Lock, Preserve)
-        {
-            BRAI,   8, 
-            BRAD,   8
-        }
-
         IndexField (BRAI, BRAD, ByteAcc, NoLock, Preserve)
-        {
-            Offset (0xA0), 
+            { 
+                Offset (0xA0), 
                 B0V0,8,B0V1,8, 
                 B0R0,8,B0R1,8, 
                 B0F0,8,B0F1,8, 
@@ -137,54 +133,52 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
                 B1C0,8,B1C1,8, 
                 B1D0,8,B1D1,8, 
                 B1D2,8,B1D3,8
-        }
-
-        Method (RE1B, 1, NotSerialized)
-        {
-            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
-            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
-            Return(BYTE)
-        }
-        Method (RECB, 2, Serialized)
-        {
-            ShiftRight(Arg1, 3, Arg1)
-            Name(TEMP, Buffer(Arg1) { })
-            Add(Arg0, Arg1, Arg1)
-            Store(0, Local0)
-            While (LLess(Arg0, Arg1))
-            {
-                Store(RE1B(Arg0), Index(TEMP, Local0))
-                Increment(Arg0)
-                Increment(Local0)
-            }
-            Return(TEMP)
-        }
-        
-        Method (WE1B, 2, NotSerialized)
-        {
-            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
-            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
-            Store(Arg1, BYTE)
-        }
-        
-        Method (WECB, 3, Serialized)
-        {
-            ShiftRight(Arg1, 3, Arg1)
-            Name(TEMP, Buffer(Arg1) { })
-            Store(Arg2, TEMP)
-            Add(Arg0, Arg1, Arg1)
-            Store(0, Local0)
-            While (LLess(Arg0, Arg1)) {
-                WE1B(Arg0, DerefOf(Index(TEMP, Local0)))
-                Increment(Arg0)
-                Increment(Local0)  
-            }
-        }
-    }
+            }    }
     
     Scope (_SB.PCI0)
     {
         Scope (BAT0) {
+            
+                    Method (_BIX, 0, NotSerialized)  // _BIX: Battery Information Extended
+        {
+            If (LNot (^^LPCB.EC0.BATP (Zero))) {
+                Return (NBIX) /* \_SB_.PCI0.BAT0.NBIX */
+            }
+            If (LEqual (^^LPCB.EC0.GBTT (Zero), 0xFF)) {
+                Return (NBIX) /* \_SB_.PCI0.BAT0.NBIX */
+            }
+            _BIF ()
+            Store (DerefOf (Index (PBIF, Zero)), Index (BIXT, One))
+            Store (DerefOf (Index (PBIF, One)), Index (BIXT, 0x02))
+            Store (DerefOf (Index (PBIF, 0x02)), Index (BIXT, 0x03))
+            Store (DerefOf (Index (PBIF, 0x03)), Index (BIXT, 0x04))
+            Store (DerefOf (Index (PBIF, 0x04)), Index (BIXT, 0x05))
+            Store (DerefOf (Index (PBIF, 0x05)), Index (BIXT, 0x06))
+            Store (DerefOf (Index (PBIF, 0x06)), Index (BIXT, 0x07))
+            Store (DerefOf (Index (PBIF, 0x07)), Index (BIXT, 0x0E))
+            Store (DerefOf (Index (PBIF, 0x08)), Index (BIXT, 0x0F))
+            Store (DerefOf (Index (PBIF, 0x09)), Index (BIXT, 0x10))
+            Store (DerefOf (Index (PBIF, 0x0A)), Index (BIXT, 0x11))
+            Store (DerefOf (Index (PBIF, 0x0B)), Index (BIXT, 0x12))
+            Store (DerefOf (Index (PBIF, 0x0C)), Index (BIXT, 0x13))
+            If (LEqual (DerefOf (Index (BIXT, One)), One)) { Store (Zero, Index (BIXT, One))
+                Store (DerefOf (Index (BIXT, 0x05)), Local0)
+                Multiply (DerefOf (Index (BIXT, 0x02)), Local0, Index (BIXT, 0x02))
+                Multiply (DerefOf (Index (BIXT, 0x03)), Local0, Index (BIXT, 0x03))
+                Multiply (DerefOf (Index (BIXT, 0x06)), Local0, Index (BIXT, 0x06))
+                Multiply (DerefOf (Index (BIXT, 0x07)), Local0, Index (BIXT, 0x07))
+                Multiply (DerefOf (Index (BIXT, 0x0E)), Local0, Index (BIXT, 0x0E))
+                Multiply (DerefOf (Index (BIXT, 0x0F)), Local0, Index (BIXT, 0x0F))
+                Divide (DerefOf (Index (BIXT, 0x02)), 0x03E8, Local0, Index (BIXT, 0x02))
+                Divide (DerefOf (Index (BIXT, 0x03)), 0x03E8, Local0, Index (BIXT, 0x03))
+                Divide (DerefOf (Index (BIXT, 0x06)), 0x03E8, Local0, Index (BIXT, 0x06))
+                Divide (DerefOf (Index (BIXT, 0x07)), 0x03E8, Local0, Index (BIXT, 0x07))
+                Divide (DerefOf (Index (BIXT, 0x0E)), 0x03E8, Local0, Index (BIXT, 0x0E))
+                Divide (DerefOf (Index (BIXT, 0x0F)), 0x03E8, Local0, Index (BIXT, 0x0F))  }
+            Store (B1B2(^^LPCB.EC0.B030,^^LPCB.EC0.B031), Index (BIXT, 0x08))
+            Store (0x0001869F, Index (BIXT, 0x09))
+            Return (BIXT) /* \_SB_.PCI0.BAT0.BIXT */
+        }
             
         Method (FBST, 4, NotSerialized)
         {
@@ -248,46 +242,7 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
             }
         }
         
-        Method (_BIX, 0, NotSerialized)  // _BIX: Battery Information Extended
-        {
-            If (LNot (^^LPCB.EC0.BATP (Zero))) {
-                Return (NBIX) /* \_SB_.PCI0.BAT0.NBIX */
-            }
-            If (LEqual (^^LPCB.EC0.GBTT (Zero), 0xFF)) {
-                Return (NBIX) /* \_SB_.PCI0.BAT0.NBIX */
-            }
-            _BIF ()
-            Store (DerefOf (Index (PBIF, Zero)), Index (BIXT, One))
-            Store (DerefOf (Index (PBIF, One)), Index (BIXT, 0x02))
-            Store (DerefOf (Index (PBIF, 0x02)), Index (BIXT, 0x03))
-            Store (DerefOf (Index (PBIF, 0x03)), Index (BIXT, 0x04))
-            Store (DerefOf (Index (PBIF, 0x04)), Index (BIXT, 0x05))
-            Store (DerefOf (Index (PBIF, 0x05)), Index (BIXT, 0x06))
-            Store (DerefOf (Index (PBIF, 0x06)), Index (BIXT, 0x07))
-            Store (DerefOf (Index (PBIF, 0x07)), Index (BIXT, 0x0E))
-            Store (DerefOf (Index (PBIF, 0x08)), Index (BIXT, 0x0F))
-            Store (DerefOf (Index (PBIF, 0x09)), Index (BIXT, 0x10))
-            Store (DerefOf (Index (PBIF, 0x0A)), Index (BIXT, 0x11))
-            Store (DerefOf (Index (PBIF, 0x0B)), Index (BIXT, 0x12))
-            Store (DerefOf (Index (PBIF, 0x0C)), Index (BIXT, 0x13))
-            If (LEqual (DerefOf (Index (BIXT, One)), One)) { Store (Zero, Index (BIXT, One))
-                Store (DerefOf (Index (BIXT, 0x05)), Local0)
-                Multiply (DerefOf (Index (BIXT, 0x02)), Local0, Index (BIXT, 0x02))
-                Multiply (DerefOf (Index (BIXT, 0x03)), Local0, Index (BIXT, 0x03))
-                Multiply (DerefOf (Index (BIXT, 0x06)), Local0, Index (BIXT, 0x06))
-                Multiply (DerefOf (Index (BIXT, 0x07)), Local0, Index (BIXT, 0x07))
-                Multiply (DerefOf (Index (BIXT, 0x0E)), Local0, Index (BIXT, 0x0E))
-                Multiply (DerefOf (Index (BIXT, 0x0F)), Local0, Index (BIXT, 0x0F))
-                Divide (DerefOf (Index (BIXT, 0x02)), 0x03E8, Local0, Index (BIXT, 0x02))
-                Divide (DerefOf (Index (BIXT, 0x03)), 0x03E8, Local0, Index (BIXT, 0x03))
-                Divide (DerefOf (Index (BIXT, 0x06)), 0x03E8, Local0, Index (BIXT, 0x06))
-                Divide (DerefOf (Index (BIXT, 0x07)), 0x03E8, Local0, Index (BIXT, 0x07))
-                Divide (DerefOf (Index (BIXT, 0x0E)), 0x03E8, Local0, Index (BIXT, 0x0E))
-                Divide (DerefOf (Index (BIXT, 0x0F)), 0x03E8, Local0, Index (BIXT, 0x0F))  }
-            Store (B1B2(^^LPCB.EC0.B030,^^LPCB.EC0.B031), Index (BIXT, 0x08))
-            Store (0x0001869F, Index (BIXT, 0x09))
-            Return (BIXT) /* \_SB_.PCI0.BAT0.BIXT */
-        }
+
         
         
         
@@ -300,6 +255,173 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
     
     Scope (_SB.PCI0.LPCB.EC0)
     {
+
+    }
+    Scope (_SB.PCI0.LPCB.EC0)
+    {
+        Method (RE1B, 1, NotSerialized)
+        {
+            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+            Return(BYTE)
+        }
+        Method (RECB, 2, Serialized)
+        {
+            ShiftRight(Arg1, 3, Arg1)
+            Name(TEMP, Buffer(Arg1) { })
+            Add(Arg0, Arg1, Arg1)
+            Store(0, Local0)
+            While (LLess(Arg0, Arg1))
+            {
+                Store(RE1B(Arg0), Index(TEMP, Local0))
+                Increment(Arg0)
+                Increment(Local0)
+            }
+            Return(TEMP)
+        }
+        
+        Method (WE1B, 2, NotSerialized)
+        {
+            OperationRegion(ERAM, EmbeddedControl, Arg0, 1)
+            Field(ERAM, ByteAcc, NoLock, Preserve) { BYTE, 8 }
+            Store(Arg1, BYTE)
+        }
+        
+        Method (WECB, 3, Serialized)
+        {
+            ShiftRight(Arg1, 3, Arg1)
+            Name(TEMP, Buffer(Arg1) { })
+            Store(Arg2, TEMP)
+            Add(Arg0, Arg1, Arg1)
+            Store(0, Local0)
+            While (LLess(Arg0, Arg1)) {
+                WE1B(Arg0, DerefOf(Index(TEMP, Local0)))
+                Increment(Arg0)
+                Increment(Local0)  
+            }
+        }
+        
+        Method (BIF0, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1M0,B1M1), Local0)
+                } Else {
+                    Store (B1B2(B0M0,B0M1), Local0)
+                }
+                If (LNotEqual (Local0, 0xFFFF)) {
+                    ShiftRight (Local0, 0x0F, Local1)
+                    And (Local1, One, Local1)
+                    XOr (Local1, One, Local0)
+                }  
+            } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BIF1, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1D0,B1D1), Local0)
+                } Else {
+                    Store (B1B2(B0D0,B0D1), Local0)
+                }
+                And (Local0, 0xFFFF, Local0)  } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BIF2, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1F0,B1F1), Local0)
+                } Else {
+                    Store (B1B2(B0F0,B0F1), Local0)
+                }
+                And (Local0, 0xFFFF, Local0)  
+            } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BIF3, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1M0,B1M1), Local0)
+                } Else {
+                    Store (B1B2(B0M0,B0M1), Local0)
+                }
+                If (LNotEqual (Local0, 0xFFFF)) {
+                    ShiftRight (Local0, 0x09, Local0)
+                    And (Local0, One, Local0)
+                    XOr (Local0, One, Local0)
+                }  
+            } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BIF4, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1D2,B1D3), Local0)
+                } Else {
+                    Store (B1B2(B0D2,B0D3), Local0)
+                }  
+            } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BIFA, 0, NotSerialized)
+        {
+            If (ECAV ()) {
+                If (BSLF) {
+                    Store (B1B2(B1N0,B1N1), Local0)
+                } Else {
+                    Store (B1B2(B0N0,B0N1), Local0)
+                }  
+            } Else { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BSTS, 0, NotSerialized)
+        {
+            If (BSLF) { Store (B1B2(B1S0,B1S1), Local0)  
+            } Else { Store (B1B2(B0S0,B0S1), Local0)  }
+            Return (Local0)
+        }
+
+        Method (BCRT, 0, NotSerialized)
+        {
+            If (BSLF) { 
+                Store (B1B2(B1C0,B1C1), Local0)  
+            } Else { 
+                Store (B1B2(B0C0,B0C1), Local0)  
+            }
+            Return (Local0)
+        }
+
+        Method (BRCP, 0, NotSerialized)
+        {
+            If (BSLF) { 
+                Store (B1B2(B1R0,B1R1), Local0)  
+            } Else { 
+                Store (B1B2(B0R0,B0R1), Local0)  
+            }
+            If (LEqual (Local0, 0xFFFF)) { Store (Ones, Local0)  }
+            Return (Local0)
+        }
+
+        Method (BVOT, 0, NotSerialized)
+        {
+            If (BSLF) { 
+                Store (B1B2(B1V0,B1V1), Local0)  
+            } Else { 
+                Store (B1B2(B0V0,B0V1), Local0)
+            }
+            Return (Local0)
+        }
+
         Method (SMBR, 3, Serialized)
         {
             Store (Package (0x03) { 0x07, Zero, Zero }, Local0)
@@ -505,130 +627,6 @@ DefinitionBlock("", "SSDT", 2, "hack", "batt", 0)
                 Release (MUEC)  
             }
             Return (Local1)
-        }
-    }
-    Scope (_SB.PCI0.LPCB.EC0)
-    {
-
-        Method (BIF0, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1M0,B1M1), Local0)
-                } Else {
-                    Store (B1B2(B0M0,B0M1), Local0)
-                }
-                If (LNotEqual (Local0, 0xFFFF)) {
-                    ShiftRight (Local0, 0x0F, Local1)
-                    And (Local1, One, Local1)
-                    XOr (Local1, One, Local0)
-                }  
-            } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BIF1, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1D0,B1D1), Local0)
-                } Else {
-                    Store (B1B2(B0D0,B0D1), Local0)
-                }
-                And (Local0, 0xFFFF, Local0)  } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BIF2, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1F0,B1F1), Local0)
-                } Else {
-                    Store (B1B2(B0F0,B0F1), Local0)
-                }
-                And (Local0, 0xFFFF, Local0)  
-            } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BIF3, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1M0,B1M1), Local0)
-                } Else {
-                    Store (B1B2(B0M0,B0M1), Local0)
-                }
-                If (LNotEqual (Local0, 0xFFFF)) {
-                    ShiftRight (Local0, 0x09, Local0)
-                    And (Local0, One, Local0)
-                    XOr (Local0, One, Local0)
-                }  
-            } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BIF4, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1D2,B1D3), Local0)
-                } Else {
-                    Store (B1B2(B0D2,B0D3), Local0)
-                }  
-            } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BIFA, 0, NotSerialized)
-        {
-            If (ECAV ()) {
-                If (BSLF) {
-                    Store (B1B2(B1N0,B1N1), Local0)
-                } Else {
-                    Store (B1B2(B0N0,B0N1), Local0)
-                }  
-            } Else { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BSTS, 0, NotSerialized)
-        {
-            If (BSLF) { Store (B1B2(B1S0,B1S1), Local0)  
-            } Else { Store (B1B2(B0S0,B0S1), Local0)  }
-            Return (Local0)
-        }
-
-        Method (BCRT, 0, NotSerialized)
-        {
-            If (BSLF) { 
-                Store (B1B2(B1C0,B1C1), Local0)  
-            } Else { 
-                Store (B1B2(B0C0,B0C1), Local0)  
-            }
-            Return (Local0)
-        }
-
-        Method (BRCP, 0, NotSerialized)
-        {
-            If (BSLF) { 
-                Store (B1B2(B1R0,B1R1), Local0)  
-            } Else { 
-                Store (B1B2(B0R0,B0R1), Local0)  
-            }
-            If (LEqual (Local0, 0xFFFF)) { Store (Ones, Local0)  }
-            Return (Local0)
-        }
-
-        Method (BVOT, 0, NotSerialized)
-        {
-            If (BSLF) { 
-                Store (B1B2(B1V0,B1V1), Local0)  
-            } Else { 
-                Store (B1B2(B0V0,B0V1), Local0)
-            }
-            Return (Local0)
         }
 
     }
