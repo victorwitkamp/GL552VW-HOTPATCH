@@ -721,6 +721,32 @@
 			</dict>
 			<dict>
 				<key>Comment</key>
+				<string>B0C1 to BXC1 (battery)</string>
+				<key>Count</key>
+				<integer>1</integer>
+				<key>Enabled</key>
+				<true/>
+				<key>Find</key>
+				<data>QjBUTRBCMEMxEEIwQzIQQg==</data>
+				<key>Limit</key>
+				<integer>0</integer>
+				<key>Mask</key>
+				<data></data>
+				<key>OemTableId</key>
+				<data></data>
+				<key>Replace</key>
+				<data>QjBUTRBCWEMxEEIwQzIQQg==</data>
+				<key>ReplaceMask</key>
+				<data></data>
+				<key>Skip</key>
+				<integer>0</integer>
+				<key>TableLength</key>
+				<integer>0</integer>
+				<key>TableSignature</key>
+				<data>RFNEVA==</data>
+			</dict>
+			<dict>
+				<key>Comment</key>
 				<string>ETPD GPIO pinning (_CRS to XCRS)</string>
 				<key>Count</key>
 				<integer>1</integer>
