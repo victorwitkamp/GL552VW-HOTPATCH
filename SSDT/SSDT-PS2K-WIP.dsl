@@ -1,16 +1,12 @@
 // Fake ambient light sensor, configure keyboard brightness, and fix function keys
-
 DefinitionBlock("", "SSDT", 2, "hack", "PS2K", 0) {
-
-
     External (\_SB.KBLV, FieldUnitObj)
     External (_SB.PCI0.LPCB.EC0.WRAM, MethodObj)
-
     External (_SB.ATKD, DeviceObj)
     Scope (_SB.ATKD) {
-
-        Method (SKBV, 1, NotSerialized) {
-            ^^PCI0.LPCB.EC0.WRAM (0x04B1, Local0)
+        Method (SKBV, 1, NotSerialized)
+        {
+            ^^PCI0.LPCB.EC0.WRAM (0x04B1, Arg0)
             Return (Arg0)
         }
     }
